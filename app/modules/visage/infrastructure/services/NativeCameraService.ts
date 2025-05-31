@@ -6,7 +6,11 @@ class NativeCameraService implements ICameraService {
             throw new Error('Method not implemented.');
         }
         
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { 
+                facingMode: 'user'
+            }
+        });
         
         video.srcObject = stream;
         await video.play();

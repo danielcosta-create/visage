@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useState } from "react";
 import { IFaceTracker } from "@/app/modules/visage/application/gateways/interfaces/IFaceTracker";
 import MediaPipeFaceTrackerFactory from "@/app/modules/visage/infrastructure/factories/MediaPipeFaceTrackerFactory";
 import vision from "@/utils/mediapipe/vision";
@@ -18,6 +18,7 @@ const FaceTrackerDIContainer = () => {
 };
 
 const useFaceTracker = () => {
+    const [isTracking, setIsTracking] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const faceTrackerRef = useRef<IFaceTracker>(null);
@@ -31,17 +32,15 @@ const useFaceTracker = () => {
         
         const faceTracker = await startFaceTrackingUseCase.execute(videoRef.current, canvasRef.current);
         faceTrackerRef.current = faceTracker;
-        faceTrackerRef.current.faceTrackerLoop(videoRef.current, canvasRef.current);
+        setIsTracking(true);
     }
-
-    useEffect(() => {
-        initialize();
-    }, []);
 
     return {
         videoRef,
         canvasRef,
         faceTrackerRef,
+        initialize,
+        isTracking
     }
 }
 
